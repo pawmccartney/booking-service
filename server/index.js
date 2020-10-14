@@ -23,6 +23,7 @@ app.get('/api/trips/:id', (req, res) => {
 app.get('/api/low-days/:id', (req, res) => {
   db.getLocationInformation(req.params.id)
   .then(result => {
+    console.log(result);
     res.send(result);
   });
 })
