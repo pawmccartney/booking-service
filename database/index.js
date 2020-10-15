@@ -38,6 +38,31 @@ var save = (trip) => {
   });
 }
 
+var deleteTrip = (id) => {
+  return new Promise((resolve, reject) => {
+    Trip.deleteOne({locationId: id}, (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+}
+
+var deleteLocation = (id) => {
+  return new Promise((resolve, reject) => {
+    Location.deleteOne({name: id}, (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        console.log(result)
+        resolve(result);
+      }
+    });
+  });
+}
+
 var getReservationsForLocation = (locationId) => {
   return new Promise((resolve, reject) => {
     Trip.find({
@@ -69,6 +94,19 @@ var createLocation = (location) => {
   });
 }
 
+var update = function(qu, obj){
+  let query = {name: qu}
+  return new Promise((resolve, reject) => {
+    Location.findOneAndUpdate(query, obj, {upsert: true}, function(err, doc){
+      if(err){
+        reject(err);
+      } else {
+        resolve(doc);
+      }
+    })
+  });
+}
+
 var getLocationInformation = (locationId) => {
   return new Promise((resolve, reject) => {
     Location.find({
@@ -83,8 +121,9 @@ var getLocationInformation = (locationId) => {
   });
 }
 
-
-
+module.exports.update = update;
+module.exports.deleteLocation = deleteLocation;
+module.exports.deleteTrip = deleteTrip;
 module.exports.save = save;
 module.exports.getReservationsForLocation = getReservationsForLocation;
 module.exports.createLocation = createLocation;
