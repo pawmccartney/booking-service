@@ -80,7 +80,7 @@ const BookingModule = () => {
             <BookingApp setCheckInPicker={setCheckInPicker} setCheckOutPicker={setCheckOutPicker} checkInPicker={checkInPicker} checkOutPicker={checkOutPicker}/>
             <GuestsApp guestsPicker={guestsPicker} setGuestsPicker={setGuestsPicker}/>
           </ReactContainer>
-          <Deals src="https://tripadcoba-luke.s3-us-west-2.amazonaws.com/Screen+Shot+2020-10-09+at+4.29.31+PM.png"/>
+          <Deals src="https://s3.us-east-2.amazonaws.com/images.for.hrr/Screen+Shot+2020-10-09+at+4.29.31+PM.png"/>
         </TripSearch>
       </MetaInner>
     </CheckRates>

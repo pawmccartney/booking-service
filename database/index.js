@@ -5,14 +5,6 @@ mongoose.connect(dbUrl, {
   useUnifiedTopology: true
 });
 
-let tripSchema = mongoose.Schema({
-  locationId: {type: Number, required: true},
-  checkIn: {type: Date, required: true},
-  checkOut: {type: Date, required: true},
-  adults: Number,
-  children: Number,
-  rooms: {type: Number, required: true}
-});
 
 let locationSchema = mongoose.Schema({
   locationId: {type: Number, required: true},
@@ -22,33 +14,10 @@ let locationSchema = mongoose.Schema({
 });
 
 
-
-let Trip = mongoose.model('Trip', tripSchema);
 let Location = mongoose.model('Location', locationSchema);
 
-var save = (trip) => {
-  return new Promise((resolve, reject) => {
-    Trip.create(trip, (err, result) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(result);
-      }
-    });
-  });
-}
 
-var deleteTrip = (id) => {
-  return new Promise((resolve, reject) => {
-    Trip.deleteOne({locationId: id}, (err, result) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(result);
-      }
-    });
-  });
-}
+
 
 var deleteLocation = (id) => {
   return new Promise((resolve, reject) => {
@@ -63,19 +32,6 @@ var deleteLocation = (id) => {
   });
 }
 
-var getReservationsForLocation = (locationId) => {
-  return new Promise((resolve, reject) => {
-    Trip.find({
-      locationId: locationId
-    }).exec((err, results) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(results);
-      }
-    });
-  });
-}
 
 var createLocation = (location) => {
   return new Promise((resolve, reject) => {
@@ -123,8 +79,5 @@ var getLocationInformation = (locationId) => {
 
 module.exports.update = update;
 module.exports.deleteLocation = deleteLocation;
-module.exports.deleteTrip = deleteTrip;
-module.exports.save = save;
-module.exports.getReservationsForLocation = getReservationsForLocation;
 module.exports.createLocation = createLocation;
 module.exports.getLocationInformation = getLocationInformation;
