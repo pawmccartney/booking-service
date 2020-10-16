@@ -11,8 +11,8 @@ const csvWriter = createCsvWriter({
 });
 
 const data = [];
-
-for (var i = 0; i < 10,000,000; i++ ) {
+//will change to 10mil after db is implimented.
+for (var i = 0; i < 10000; i++ ) {
   let lowDays = [];
   var today = new Date();
   for (var j = 0; j < 40; j++) {
