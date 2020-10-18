@@ -12,13 +12,12 @@ const csvStringifier = createCsvStringifier({
   ]
 });
 
-var filePath = 'out.csv';
+var filePath = 'test.csv';
 const fileWriteStream = fs.createWriteStream(path.resolve(filePath));
 
 var data = [];
-//will change to 10mil after db is implimented.
 var generator = async ()=>{
-  for (var i = 0; i < 10000000; i++ ) {
+  for (var i = 0; i < 10; i++ ) {
     let lowDays = [];
     var today = new Date();
     for (var j = 0; j < 40; j++) {
@@ -41,16 +40,9 @@ var generator = async ()=>{
         fileWriteStream.once('drain', resolve);
       })
     }
-    // await csvWriter
-    // .writeRecords(data)
   }
   console.log('10mil created');
 }
-
-// csvWriter
-//   .writeRecords(data)
-//   .then(()=> console.log('10mil created'));
-
 generator();
 
 

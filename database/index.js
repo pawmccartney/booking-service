@@ -1,83 +1,35 @@
-const mongoose = require('mongoose');
-var dbUrl = 'mongodb://localhost/booking'
-mongoose.connect(dbUrl, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
+var cassandra = require('cassandra-driver');
+
+
+const client = new cassandra.Client({
+  contactPoints: ['localhost'],
+  localDataCenter: 'datacenter1',
+  keyspace: 'hotels'
 });
 
 
-let locationSchema = mongoose.Schema({
-  locationId: {type: Number, required: true},
-  rooms: {type: Number, required: true},
-  name: String,
-  lowDays: [{}]
-});
-
-
-let Location = mongoose.model('Location', locationSchema);
-
-
-
-
-var deleteLocation = (id) => {
-  return new Promise((resolve, reject) => {
-    Location.deleteOne({name: id}, (err, result) => {
-      if (err) {
-        reject(err);
-      } else {
-        console.log(result)
-        resolve(result);
+var getData = function (name, callback){
+  if(name === 'hotel0'){
+    name = 'hotel1';
+   }
+  var findHotel = `SELECT * FROM hotel WHERE name = '${name}' ALLOW FILTERING`;
+  client.execute(findHotel, function (err, result) {
+    if (err) {
+      console.log(err);
+      callback(['there was an error'])
+    }
+    if(result.rows.length === 0){
+        callback(['hotel not found'])
+    } else {
+      var obj = {
+          locationId: Number(result.rows[0].locationid),
+          rooms: result.rows[0].rooms,
+          name: result.rows[0].name,
+          lowDays: result.rows[0].lowdays.split(',')
       }
-    });
-  });
+      callback([obj]);
+    }
+  })
 }
 
-
-var createLocation = (location) => {
-  return new Promise((resolve, reject) => {
-    Location.create({
-      locationId: location.id,
-      rooms: location.rooms,
-      name: location.name,
-      lowDays: location.lowDays
-    }, (err, results) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(results);
-      }
-    });
-  });
-}
-
-var update = function(qu, obj){
-  let query = {name: qu}
-  return new Promise((resolve, reject) => {
-    Location.findOneAndUpdate(query, obj, {upsert: true}, function(err, doc){
-      if(err){
-        reject(err);
-      } else {
-        resolve(doc);
-      }
-    })
-  });
-}
-
-var getLocationInformation = (locationId) => {
-  return new Promise((resolve, reject) => {
-    Location.find({
-      name: locationId
-    }).exec((err, results) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(results);
-      }
-    });
-  });
-}
-
-module.exports.update = update;
-module.exports.deleteLocation = deleteLocation;
-module.exports.createLocation = createLocation;
-module.exports.getLocationInformation = getLocationInformation;
+module.exports.getData = getData;

@@ -2,6 +2,7 @@ const db = require('../database/index.js');
 const path = require('path');
 const express = require('express');
 
+
 const app = express();
 
 const PORT = 4002;
@@ -14,12 +15,13 @@ app.use(express.urlencoded({extended: true}));
 
 
 //gets info
-app.get('/api/low-days/:id', (req, res) => {
-  db.getLocationInformation(req.params.id)
-  .then(result => {
-    res.send(result);
+app.get('/api/low-days/:id', async (req, res) => {
+  db.getData(req.params.id, (data) =>{
+    res.send(data);
   });
 })
+
+//TODO: all of the following endpoints
 
 //creates info / updates info if it exists
 app.post('/api/low-days/update/:name', (req, res) => {
