@@ -12,12 +12,12 @@ const csvStringifier = createCsvStringifier({
   ]
 });
 
-var filePath = 'test.csv';
+var filePath = 'out.csv';
 const fileWriteStream = fs.createWriteStream(path.resolve(filePath));
 
 var data = [];
 var generator = async ()=>{
-  for (var i = 0; i < 10; i++ ) {
+  for (var i = 0; i < 10000000; i++ ) {
     let lowDays = [];
     var today = new Date();
     for (var j = 0; j < 40; j++) {

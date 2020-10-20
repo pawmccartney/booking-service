@@ -10,8 +10,9 @@ Set to use port 4002
 
 # Initial setup
 install dependancies with npm install in terminal.
-install cassandra.
-see "database and dataGenerator section.
+install cassandra:
+  "https://cassandra.apache.org/download/"
+after that, see "database and dataGenerator" section.
 
 # Endpoints
 to obtain data make a get request to "/api/low-days/:id" where id is the name of the document you want to recieve.
@@ -28,12 +29,15 @@ to generate data run "npm run 10mil" in the terminal.
 ==seeding==
 
 to seed the database open a terminal and run "cqlsh" to open the cassandra terminal. use the following querry to create a keyspace:
+
 CREATE KEYSPACE hotels WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
 
 run the following command in the cqlsh terminal:
-CREATE TABLE hotels.hotel (locationId text PRIMARY KEY, rooms int, name text, lowDays text)
+
+CREATE TABLE hotels.hotel (locationId text, rooms int, name text PRIMARY KEY, lowDays text);
 
 then run the following command in the same terminal:
+
 COPY hotels.hotel (locationId, rooms, name, lowDays) FROM 'out.csv' WITH HEADER = TRUE;
 
 NOTE: this may take some time.
