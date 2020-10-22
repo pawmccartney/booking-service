@@ -1,6 +1,7 @@
-const db = require('../database/index.js');
+
 const path = require('path');
 const express = require('express');
+const {getData} = require('../database/index.js');
 
 const app = express();
 
@@ -15,10 +16,20 @@ app.use(express.urlencoded({extended: true}));
 
 //gets info
 app.get('/api/low-days/:id', (req, res) => {
-  db.getLocationInformation(req.params.id)
-  .then(result => {
-    res.send(result);
-  });
+  var query = req.params.id === 'hotel0'? 'hotel1':req.params.id;
+  getData(query, (data, error)=>{
+    if(error || data.rows.length === 0){
+      res.status(404);
+    } else {
+      hotel = {
+        locationId: data.rows[0].locationid,
+        rooms: data.rows[0].rooms,
+        name: data.rows[0].name,
+        lowDays: data.rows[0].lowdays.split(',')
+      }
+      res.send([hotel]);
+    }
+  })
 })
 
 //creates info / updates info if it exists

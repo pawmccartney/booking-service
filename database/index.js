@@ -1,83 +1,50 @@
-const mongoose = require('mongoose');
-var dbUrl = 'mongodb://localhost/booking'
-mongoose.connect(dbUrl, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
+const { Pool } = require('pg');
+
+const pool = new Pool({
+  host: 'localhost',
+  database: 'hotels',
+  port: 5432,
+  user: 'postgres',
+  password: 'password',
 });
 
-
-let locationSchema = mongoose.Schema({
-  locationId: {type: Number, required: true},
-  rooms: {type: Number, required: true},
-  name: String,
-  lowDays: [{}]
-});
-
-
-let Location = mongoose.model('Location', locationSchema);
+module.exports.seedDb = async ()=>{
+  var createTable = 'CREATE TABLE hotel(locationId integer NOT NULL,rooms integer NOT NULL, name VARCHAR PRIMARY KEY, lowDays VARCHAR)';
 
 
 
+  var plantSeed = ()=>{
 
-var deleteLocation = (id) => {
-  return new Promise((resolve, reject) => {
-    Location.deleteOne({name: id}, (err, result) => {
-      if (err) {
-        reject(err);
-      } else {
-        console.log(result)
-        resolve(result);
-      }
-    });
-  });
-}
+    var seed = `COPY hotel (locationId, rooms, name, lowDays) FROM '${__dirname + '/../out.csv'}' WITH CSV HEADER delimiter ','`
 
-
-var createLocation = (location) => {
-  return new Promise((resolve, reject) => {
-    Location.create({
-      locationId: location.id,
-      rooms: location.rooms,
-      name: location.name,
-      lowDays: location.lowDays
-    }, (err, results) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(results);
-      }
-    });
-  });
-}
-
-var update = function(qu, obj){
-  let query = {name: qu}
-  return new Promise((resolve, reject) => {
-    Location.findOneAndUpdate(query, obj, {upsert: true}, function(err, doc){
+    pool.query(seed, (err, res)=>{
       if(err){
-        reject(err);
+        console.log(err);
       } else {
-        resolve(doc);
+        console.log('table seeded\n', res);
       }
+      pool.end();
     })
-  });
+  }
+  pool.query(createTable, (err, res)=>{
+    if(err){
+      console.log('there was an error the table, it may already exist');
+      plantSeed();
+    } else {
+     console.log('table created');
+     plantSeed();
+    }
+  })
 }
 
-var getLocationInformation = (locationId) => {
-  return new Promise((resolve, reject) => {
-    Location.find({
-      name: locationId
-    }).exec((err, results) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(results);
-      }
-    });
-  });
-}
 
-module.exports.update = update;
-module.exports.deleteLocation = deleteLocation;
-module.exports.createLocation = createLocation;
-module.exports.getLocationInformation = getLocationInformation;
+module.exports.getData = (name, callback)=>{
+  var q = `SELECT * FROM hotel WHERE name = '${name}'`;
+  pool.query(q, (err, res)=>{
+    if(err){
+      callback(res, err);
+    } else {
+      callback(res);
+    }
+  })
+}
