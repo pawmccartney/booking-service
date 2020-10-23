@@ -41,15 +41,10 @@ var generator = async ()=>{
         fileWriteStream.once('drain', resolve);
       })
     }
-    // await csvWriter
-    // .writeRecords(data)
   }
   console.log('10mil created');
 }
 
-// csvWriter
-//   .writeRecords(data)
-//   .then(()=> console.log('10mil created'));
 
 generator();
 
