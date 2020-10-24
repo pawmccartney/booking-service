@@ -1,4 +1,4 @@
-
+require('newrelic');
 const path = require('path');
 const express = require('express');
 const {getData} = require('../database/index.js');
