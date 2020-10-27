@@ -18,7 +18,7 @@ const fileWriteStream = fs.createWriteStream(path.resolve(filePath));
 var data = [];
 //will change to 10mil after db is implimented.
 var generator = async ()=>{
-  for (var i = 0; i < 10000000; i++ ) {
+  for (var i = 0; i < 1000000; i++ ) {
     let lowDays = [];
     var today = new Date();
     for (var j = 0; j < 40; j++) {

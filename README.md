@@ -48,7 +48,7 @@ so from inside this admin terminal, run the following to set the password for th
 
   ALTER USER postgres PASSWORD 'password';
 
-after that your done! ctrl+d back to the base terminal or close the termial all together. your choice.
+after that your done! ctrl+d back to the base terminal or closesudoo the termial all together. your choice.
 
 
 # Tools
